@@ -1,9 +1,11 @@
 // src/route/api/hello.js
-const express = require('express');
-const router = express.Router();
-
-router.get('/hello', (req, res) => {
-  res.json({ message: 'hello' });
-});
-
-module.exports = router;
+module.exports = {
+    get: (req) => {
+      return { message: 'hello' };
+    },
+    post: (req) => {
+      const { name } = req.body;
+      return { message: `hello, ${name}` };
+    },
+  };
+  
