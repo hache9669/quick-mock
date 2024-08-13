@@ -1,14 +1,11 @@
-import { Request } from "express";
-import { RouteHandlers } from "../../types/RouteHandlers";
+import { CreateRouteHandlers } from "../../utils/CreateRouteHandlers";
 
-const helloHandlers: RouteHandlers = {
-  get: (req: Request) => {
+export default CreateRouteHandlers({
+  get: (req) => {
     return { message: 'bye' };
   },
-  post: (req: Request) => {
+  post: (req) => {
     const { name } = req.body;
     return { message: `bye, ${name}` };
   },
-};
-
-export default helloHandlers;
+});
