@@ -1,6 +1,7 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+import express, { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
+import { RouteHandlers } from './types/RouteHandlers';
 
 const app = express();
 const port = 3000;
@@ -9,35 +10,28 @@ const port = 3000;
 app.use(express.json());
 
 const routesDir = path.join(__dirname, 'route');
-console.log(routesDir);
 
 fs.readdirSync(routesDir).forEach((folder) => {
-  console.log({folder});
   const folderPath = path.join(routesDir, folder);
-  console.log({folderPath});
 
   if (fs.statSync(folderPath).isDirectory()) {
     fs.readdirSync(folderPath).forEach((file) => {
       const routePath = path.join(folderPath, file);
-      const handlers = require(routePath);
-      console.log({file, routePath, handlers});
+      const handlers: RouteHandlers = require(routePath).default;
 
       const routeBase = `/${folder}`;
-      console.log({routeBase});
 
       if (handlers.get) {
-        app.get(`${routeBase}/${path.basename(file, '.js')}`, (req, res) => {
-          res.json(handlers.get(req));
+        app.get(`${routeBase}/${path.basename(file, '.ts')}`, (req: Request, res: Response) => {
+          res.json(handlers.get!(req));
         });
       }
 
       if (handlers.post) {
-        app.post(`${routeBase}/${path.basename(file, '.js')}`, (req, res) => {
-          res.json(handlers.post(req));
+        app.post(`${routeBase}/${path.basename(file, '.ts')}`, (req: Request, res: Response) => {
+          res.json(handlers.post!(req));
         });
       }
-
-      // 他のHTTPメソッド (PUT, DELETEなど) を追加する場合は、同様に追加可能です
     });
   }
 });
