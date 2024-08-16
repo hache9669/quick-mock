@@ -57,7 +57,7 @@ export const startServer = (routesDir: string, port: number) => {
 
     const fileParentPath = path.dirname(filePath);
     const relativePart = path.relative(rootPath, fileParentPath).split(path.sep).join('/');
-    const url = `/${relativePart}/${path.basename(filePath, '.ts')}`
+    const url = `/${relativePart}/${path.basename(filePath, '.ts')}`.replace('//', '/');
 
     console.log(picocolors.bold(url));
     console.log('  ' + Object.keys(handlers).map(method => method.toUpperCase()).join(', '))
