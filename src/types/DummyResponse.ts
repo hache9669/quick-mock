@@ -51,3 +51,7 @@ export const isArrayOfDummyResponsePossibility = (target: DummyResponse): target
     return Array.isArray(target)
         && target.every(t => (isSimpleDummyResponse(t.content) || isDummyResponseFactory(t.content)) && typeof t.possibility === 'number');
 }
+
+export const isDummyResponse = (obj: any): obj is DummyResponse => {
+    return isSimpleDummyResponse(obj) || isDummyResponseFactory(obj) || isArrayOfDummyResponsePossibility(obj);
+}

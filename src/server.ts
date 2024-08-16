@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
+import { isRouteHandlers, resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
 import picocolors from 'picocolors';
 
 export const startServer = (routesDir: string, port: number) => {
@@ -49,6 +49,11 @@ export const startServer = (routesDir: string, port: number) => {
 
   const load = (filePath: string, rootPath: string) => {
     const handlers: RouteHandlers = require(filePath).default;
+    if(!isRouteHandlers(handlers)) {
+      console.log(picocolors.red(filePath + ' is not route handler.'));
+      console.log(picocolors.red('export default = ' + handlers));
+      return;
+    }
 
     const fileParentPath = path.dirname(filePath);
     const relativePart = path.relative(rootPath, fileParentPath).split(path.sep).join('/');

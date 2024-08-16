@@ -1,11 +1,29 @@
 import { Request } from 'express';
-import { DummyResponse, isArrayOfDummyResponsePossibility, isDummyResponseFactory, isSimpleDummyResponse, SimpleDummyResponse } from './DummyResponse';
+import { 
+  DummyResponse, 
+  isArrayOfDummyResponsePossibility, 
+  isDummyResponse, 
+  isDummyResponseFactory, 
+  isSimpleDummyResponse, 
+  SimpleDummyResponse
+} from './DummyResponse';
 
 export interface RouteHandlers {
   get?: RouteDefine;
   post?: RouteDefine;
   put?: RouteDefine;
   delete?: RouteDefine;
+}
+export const isRouteHandlers = (obj: any): obj is RouteHandlers => {
+  if(typeof obj !== 'object') {
+    return false;
+  }
+
+  const get = (obj.get && isRouteDefine(obj.get)) || !obj.get;
+  const post = (obj.post && isRouteDefine(obj.post)) || !obj.post;
+  const put = (obj.put && isRouteDefine(obj.put)) || !obj.put;
+  const del = (obj.delete && isRouteDefine(obj.delete)) || !obj.delete;
+  return get && post && put && del;
 }
 
 /**
@@ -17,6 +35,9 @@ export interface RouteHandlers {
 export interface RouteDefine {
   response: DummyResponse;
   options?: RouteOption
+}
+const isRouteDefine = (obj: any): obj is RouteDefine => {
+  return obj.response && isDummyResponse(obj.response);
 }
 
 /**
