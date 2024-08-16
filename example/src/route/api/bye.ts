@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { SimpleDummyResponse, HttpStatusCode, DummyResponseFactory, CreateRouteHandlers } from "quick-mock";
+import { SimpleDummyResponse, HttpStatusCode, DummyResponseFactory, CreateRouteHandlers } from "rapid-mock";
 
 const getResponse: SimpleDummyResponse = {
   status: HttpStatusCode.OK,

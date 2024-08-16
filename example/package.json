@@ -1,7 +1,7 @@
 {
-  "name": "quick-mock-example",
+  "name": "rapid-mock-example",
   "version": "1.0.0",
-  "description": "sample project of quick-mock",
+  "description": "sample project of rapid-mock",
   "main": "index.js",
   "scripts": {
     "start": "ts-node-dev src/index.ts",
@@ -10,7 +10,7 @@
   "author": "hache9669",
   "license": "MIT",
   "dependencies": {
-    "quick-mock": "file:../",
-    "quick-mock-example": "file:"
+    "rapid-mock": "file:../",
+    "rapid-mock-example": "file:"
   }
 }

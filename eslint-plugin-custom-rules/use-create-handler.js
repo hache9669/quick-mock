@@ -14,7 +14,7 @@ module.exports = {
           const hasCreateRouteHandlersImport = node.body.some(statement => {
             return (
               statement.type === 'ImportDeclaration' &&
-              statement.source.value === 'quick-mock' && 
+              statement.source.value === 'rapid-mock' && 
               statement.specifiers.some(specifier => specifier.imported.name === 'CreateRouteHandlers')
             );
           });

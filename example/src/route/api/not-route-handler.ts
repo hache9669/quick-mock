@@ -1,4 +1,4 @@
-import { CreateRouteHandlers } from "quick-mock";
+import { CreateRouteHandlers } from "rapid-mock";
 
 CreateRouteHandlers({});  // imported but not used, not exported
 
