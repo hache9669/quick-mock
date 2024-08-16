@@ -1,8 +1,8 @@
 ### GET
-GET http://localhost:3000/api/hello
+GET http://localhost:3000/api/bye
 
 ### POST
-POST http://localhost:3000/api/hello
+POST http://localhost:3000/api/bye
 Content-Type: application/json
 
 {
