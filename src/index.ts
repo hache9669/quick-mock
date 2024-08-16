@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
+import picocolors from 'picocolors';
 
 // expressの初期化
 const app = express();
@@ -24,26 +25,46 @@ const createResponse = (route: RouteDefine, expressMethod: "get" | "post" | "put
   });
 }
 
-const routesDir = path.join(__dirname, 'route');
-
-fs.readdirSync(routesDir).forEach((folder) => {
-  const folderPath = path.join(routesDir, folder);
-
-  if (fs.statSync(folderPath).isDirectory()) {
-    fs.readdirSync(folderPath).forEach((file) => {
-      const routePath = path.join(folderPath, file);
-      const handlers: RouteHandlers = require(routePath).default;
-
-      const routeBase = `/${folder}`;
-      const url = `${routeBase}/${path.basename(file, '.ts')}`;
-
-      if (handlers.get) createResponse(handlers.get, 'get', url);
-      if (handlers.post) createResponse(handlers.post, 'post', url);
-      if (handlers.put) createResponse(handlers.put, 'put', url);
-      if (handlers.delete) createResponse(handlers.delete, 'delete', url);
-    });
+/**
+ * ディレクトリを指定し、ルートハンドラーを登録する
+ * @param parent 
+ */
+const seek = (parentPath: string, rootPath?: string) => {
+  if(!rootPath) {
+    rootPath = parentPath;
   }
-});
+
+  fs.readdirSync(parentPath).forEach(childName => {
+    const childPath = path.join(parentPath, childName);
+
+    if(fs.statSync(childPath).isDirectory()) {
+      // ディレクトリなら再帰的に探索
+      seek(childPath, rootPath);
+    } else {
+      // ファイルなら内容を読み取り、ルートとして定義
+      load(childPath, rootPath);
+    }
+  });
+};
+
+const load = (filePath: string, rootPath: string) => {
+  const handlers: RouteHandlers = require(filePath).default;
+
+  const fileParentPath = path.dirname(filePath);
+  const relativePart = path.relative(rootPath, fileParentPath).split(path.sep).join('/');
+  const url = `/${relativePart}/${path.basename(filePath, '.ts')}`
+
+  console.log(picocolors.bold(url));
+  console.log('  ' + Object.keys(handlers).map(method => method.toUpperCase()).join(', '))
+
+  if (handlers.get) createResponse(handlers.get, 'get', url);
+  if (handlers.post) createResponse(handlers.post, 'post', url);
+  if (handlers.put) createResponse(handlers.put, 'put', url);
+  if (handlers.delete) createResponse(handlers.delete, 'delete', url);
+}
+
+const routesDir = path.join(__dirname, 'route');
+seek(routesDir);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

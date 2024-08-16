@@ -1,0 +1,11 @@
+### GET
+GET http://localhost:3000/api/italy/ciao
+
+### POST
+POST http://localhost:3000/api/italy/ciao
+Content-Type: application/json
+
+{
+  "name": "John Brown",
+  "email": "john.brown@example.com"
+}

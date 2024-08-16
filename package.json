@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "picocolors": "^1.0.1",
     "quick-mock": "file:"
   },
   "devDependencies": {

@@ -14,14 +14,14 @@ module.exports = {
           const hasCreateRouteHandlersImport = node.body.some(statement => {
             return (
               statement.type === 'ImportDeclaration' &&
-              statement.source.value === '../../utils/CreateRouteHandlers'
+              statement.source.value.includes('CreateRouteHandlers')
             );
           });
   
           if (!hasCreateRouteHandlersImport) {
             context.report({
               node,
-              message: "Route files must import 'CreateRouteHandlers' from '../../utils/CreateRouteHandlers'",
+              message: "Route files must use 'CreateRouteHandlers'",
             });
           }
         },
