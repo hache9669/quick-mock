@@ -2,18 +2,30 @@
   "name": "quick-mock",
   "version": "1.0.0",
   "description": "simple customizable mock server, automatically maps your file structure to corresponding URL paths",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
+    "clean": "rimraf ./lib",
+    "build": "npm run clean && tsc",
+    "lint": "eslint 'src/**/*.ts'",
     "start": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "files": [
+    "lib/",
+    "src/"
+  ],
+  "keywords": [
+    "mock",
+    "api",
+    "json",
+    "express",
+    "server"
+  ],
+  "author": "hache9669",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
-    "picocolors": "^1.0.1",
-    "quick-mock": "file:"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
@@ -22,6 +34,9 @@
     "eslint": "^8.57.0",
     "eslint-plugin-custom-rules": "file:eslint-plugin-custom-rules",
     "eslint-plugin-import": "^2.29.1",
+    "picocolors": "^1.0.1",
+    "quick-mock": "file:",
+    "rimraf": "^6.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"
   }
