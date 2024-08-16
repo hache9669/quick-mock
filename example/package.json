@@ -1,0 +1,16 @@
+{
+  "name": "quick-mock-example",
+  "version": "1.0.0",
+  "description": "sample project of quick-mock",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hache9669",
+  "license": "MIT",
+  "dependencies": {
+    "quick-mock": "file:../",
+    "quick-mock-example": "file:"
+  }
+}
