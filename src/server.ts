@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { isRouteHandlers, resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
 import picocolors from 'picocolors';
+import { rabbitSays } from './utils/logs';
 
 export const startServer = (routesDir: string, port: number) => {
   // expressの初期化
@@ -68,11 +69,14 @@ export const startServer = (routesDir: string, port: number) => {
     if (handlers.delete) createResponse(handlers.delete, 'delete', url);
   }
 
+  rabbitSays('finding route definition...');
+
   // 指定されたディレクトリ内部のルート定義ファイルからAPIのルートを登録
   seek(routesDir);
 
   // サーバー起動
   app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    const message = `Server is running on http://localhost:${port}`;
+    rabbitSays(message, true);
   });
 }

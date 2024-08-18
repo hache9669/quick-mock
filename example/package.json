@@ -10,7 +10,6 @@
   "author": "hache9669",
   "license": "MIT",
   "dependencies": {
-    "rapid-mock": "file:../",
-    "rapid-mock-example": "file:"
+    "rapid-mock": "file:.."
   }
 }
