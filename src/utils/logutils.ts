@@ -11,4 +11,5 @@ export const rabbitSays = (message: string, openEyes: boolean = false) => {
       console.log(' ( -.-)    < '+ spaced +'│');
       console.log(' o_(")(")   ╰'+ border  +'╯');
   }
+  console.log('');
 }

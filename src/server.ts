@@ -8,6 +8,33 @@ import { ILog } from './types/ILog';
 import { createDefaultLogger, createLogMiddleware } from './middleware/logger';
 
 /**
+ * ディレクトリ構造から、APIのURLを組み立てる
+ * 
+ * @param rootPath 
+ * @param filePath 
+ * @returns 
+ */
+const createUrl = (rootPath: string, filePath: string) => {
+  const fileParentPath = path.dirname(filePath);
+  const relativePart = path.relative(rootPath, fileParentPath).split(path.sep).join('/');
+  
+  const filename = path.basename(filePath, '.ts');
+  let url = `/${relativePart}`;
+  
+  // 各ディレクトリのindex.ts はディレクトリ名でアクセスできる
+  // ex. route/api/locale/index.ts  --> /api/locale
+  //     route/api/locale/ja-JP.ts  --> /api/locale/ja-JP
+  if(filename !== 'index') url += '/' + filename;
+
+  // [name]はパスパラメータになる
+  // ex. route/api/users/[userId].ts         --> /api/users/1
+  //     route/api/posts/[postId]/publish.ts --> /api/posts/1/publish
+  url = url.replace(/\[(.+)\]/, ':$1');
+  
+  return url.replace('//', '/');
+}
+
+/**
  * 
  * @param routesDir ルート定義を格納しているディレクトリのパス
  * @param port サーバを動かすポート
@@ -61,7 +88,18 @@ export const startServer = (routesDir: string, port: number, logging?: ILog|stri
     });
   };
 
+  /**
+   * ファイルを読み込み、ルートの定義であれば登録する
+   * 
+   * @param filePath 読み込むファイルのパス
+   * @param rootPath ルート定義が格納されるディレクトリの最上位パス
+   */
   const load = (filePath: string, rootPath: string) => {
+    if (path.extname(filePath) !== '.ts') {
+      console.log(picocolors.red(filePath + ' is not typescript file.'));
+      return;
+    }
+
     const handlers: RouteHandlers = require(filePath).default;
     if(!isRouteHandlers(handlers)) {
       console.log(picocolors.red(filePath + ' is not route handler.'));
@@ -69,10 +107,7 @@ export const startServer = (routesDir: string, port: number, logging?: ILog|stri
       return;
     }
 
-    const fileParentPath = path.dirname(filePath);
-    const relativePart = path.relative(rootPath, fileParentPath).split(path.sep).join('/');
-    const url = `/${relativePart}/${path.basename(filePath, '.ts')}`.replace('//', '/');
-
+    const url = createUrl(rootPath, filePath);
     console.log(picocolors.bold(url));
     console.log('  ' + Object.keys(handlers).map(method => method.toUpperCase()).join(', '))
 
