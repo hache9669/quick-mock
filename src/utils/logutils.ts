@@ -1,5 +1,5 @@
 export const rabbitSays = (message: string, openEyes: boolean = false) => {
-    const spaced = ' ' + message + ' ';
+  const spaced = ' ' + message + ' ';
   const border = spaced.split('').map(c => '─').join('');
 
   if(openEyes) {

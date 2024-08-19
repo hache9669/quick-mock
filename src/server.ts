@@ -3,14 +3,27 @@ import fs from 'fs';
 import path from 'path';
 import { isRouteHandlers, resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
 import picocolors from 'picocolors';
-import { rabbitSays } from './utils/logs';
+import { rabbitSays } from './utils/logutils';
+import { ILog } from './types/ILog';
+import { createDefaultLogger, createLogMiddleware } from './middleware/logger';
 
-export const startServer = (routesDir: string, port: number) => {
+/**
+ * 
+ * @param routesDir ルート定義を格納しているディレクトリのパス
+ * @param port サーバを動かすポート
+ * @param logging ログファイルのパス、もしくはログの設定オブジェクト
+ */
+export const startServer = (routesDir: string, port: number, logging?: ILog|string) => {
   // expressの初期化
   const app = express();
-
-  // ミドルウェア登録
   app.use(express.json());
+
+  // ログの設定
+  if(logging) {
+    let logger: ILog = (typeof logging === 'string') ? createDefaultLogger(logging) : logging;
+    const logMiddleware = createLogMiddleware(logger);
+    app.use(logMiddleware);
+  }
 
   /**
    * ルート定義オブジェクトからレスポンスを作成する処理
