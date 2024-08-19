@@ -7,3 +7,6 @@ import statuses from "./utils/HttpStatusCode";
 export { ILog } from "./types/ILog"
 
 export const HttpStatusCode = statuses;
+
+// dependencies re-export
+export { Request, Response, NextFunction } from 'express';
