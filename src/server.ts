@@ -45,6 +45,12 @@ export const startServer = (routesDir: string, port: number, logging?: ILog|stri
   const app = express();
   app.use(express.json());
 
+  /** @ts-ignore エラーハンドリング */
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    // @TODO レスポンスどうすべき？
+  });
+
   // ログの設定
   if(logging) {
     let logger: ILog = (typeof logging === 'string') ? createDefaultLogger(logging) : logging;

@@ -13,7 +13,7 @@ const logSetting: ILog = {
     writeTo: logPath,
     format: (req:  Request, res: Response) => {
         const now = new Date().toLocaleString('ja-JP');
-        const params = { params: req.params, body: req.body };
+        const params = { params: req.params, query: req.query, body: req.body };
         const logLine = `[${now}] ${req.ip} ${req.method} ${req.url} ${res.statusCode} ${JSON.stringify(params)}`;
         return logLine;
     },

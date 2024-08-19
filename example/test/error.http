@@ -1,0 +1,5 @@
+### GET works
+GET http://localhost:3000/api/fatal-error
+
+### POST not works
+POST http://localhost:3000/api/fatal-error
