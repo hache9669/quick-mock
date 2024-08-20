@@ -24,14 +24,17 @@ type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => vo
 
 export const createLogMiddleware = (logger: ILog) => {
     const middleware: ExpressMiddleware  = (req, res, next) => {
-        const stream =  fs.createWriteStream(logger.writeTo, { flags: 'a' });
-        const line = addNewLineIfNotExists(logger.format(req, res));
-        stream.write(line);
-        stream.close();
+        // レスポンス内容が確定してからログを記録する
+        res.on('finish', () => {
+            const stream =  fs.createWriteStream(logger.writeTo, { flags: 'a' });
+            const line = addNewLineIfNotExists(logger.format(req, res));
+            stream.write(line);
+            stream.close();
 
-        if(logger.writeConsole) {
-            console.log(line.trim()); // コンソール側では改行コードは余計
-        }
+            if(logger.writeConsole) {
+                console.log(line.trim()); // コンソール側では改行コードは余計
+            }
+        });
 
         next();
     };
