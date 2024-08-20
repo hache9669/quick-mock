@@ -9,3 +9,15 @@ Content-Type: application/json
   "name": "John Brown",
   "email": "john.brown@example.com"
 }
+
+### GET(it tooks 5 sec)
+GET http://localhost:3000/api/lazy_hello
+
+### POST(it tooks 1-10 sec)
+POST http://localhost:3000/api/lazy_hello
+Content-Type: application/json
+
+{
+  "name": "John Brown",
+  "email": "john.brown@example.com"
+}

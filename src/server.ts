@@ -7,6 +7,8 @@ import { rabbitSays } from './utils/logutils';
 import { ILog } from './types/ILog';
 import { createDefaultLogger, createLogMiddleware } from './middleware/logger';
 
+// @TODO 分割したい…
+
 /**
  * ディレクトリ構造から、APIのURLを組み立てる
  * 
@@ -45,12 +47,6 @@ export const startServer = (routesDir: string, port: number, logging?: ILog|stri
   const app = express();
   app.use(express.json());
 
-  /** @ts-ignore エラーハンドリング */
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    // @TODO レスポンスどうすべき？
-  });
-
   // ログの設定
   if(logging) {
     let logger: ILog = (typeof logging === 'string') ? createDefaultLogger(logging) : logging;
@@ -68,7 +64,18 @@ export const startServer = (routesDir: string, port: number, logging?: ILog|stri
   const createResponse = (route: RouteDefine, expressMethod: "get" | "post" | "put" | "delete", url: string) => {
     app[expressMethod](url, (req: Request, res: Response) => {
       const { status, headers, body } = resolveRoute(app, route, req);
-      res.status(status).header(headers).json(body);
+
+      if(route.options?.delay) {
+        // 遅延設定があれば計算し、その秒数遅らせて実行する
+        const delaySec = (typeof route.options.delay === 'number') 
+                    ? route.options.delay
+                    : Math.random() * (route.options.delay.max - route.options.delay.min) + route.options.delay.min;
+
+        setTimeout(() => res.status(status).header(headers).json(body), delaySec * 1000);
+      } else {
+        // 遅延設定がなければすぐ実行
+        res.status(status).header(headers).json(body)
+      }
     });
   }
 
