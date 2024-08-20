@@ -1,14 +1,19 @@
 import { Request, Response } from "express";
 
 /**
- * ログ出力を定義するインターフェイス
+ * ログの出力設定
+ */
+export type ILog = {
+  writeTo: string,
+} & Required<LogOption>
+
+/**
+ * ログ出力のオプション
  * 
- * @property writeTo 出力先ファイルパス
- * @property writeConsole? サーバープロセスのコンソールにも出力する場合はtrue
+ * @property writeConsole サーバープロセスのコンソールにも出力する場合はtrue
  * @method format 出力文字列を作る関数
  */
-export interface ILog {
-  writeTo: string;
+export interface LogOption {
   writeConsole?: boolean
-  format: (req: Request, res: Response) => string;
+  format?: (req: Request, res: Response) => string;
 }

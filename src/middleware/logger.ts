@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from "path";
 import os from 'os';
 import { ILog } from "../types/ILog";
 import { NextFunction, Request, Response } from "express";

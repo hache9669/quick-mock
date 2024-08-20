@@ -4,7 +4,7 @@ import path from 'path';
 import { isRouteHandlers, resolveRoute, RouteDefine, RouteHandlers } from './types/RouteHandlers';
 import picocolors from 'picocolors';
 import { rabbitSays } from './utils/logutils';
-import { ILog } from './types/ILog';
+import { ILog, LogOption } from './types/ILog';
 import { createDefaultLogger, createLogMiddleware } from './middleware/logger';
 
 // @TODO 分割したい…
@@ -42,14 +42,14 @@ const createUrl = (rootPath: string, filePath: string) => {
  * @param port サーバを動かすポート
  * @param logging ログファイルのパス、もしくはログの設定オブジェクト
  */
-export const startServer = (routesDir: string, port: number, logging?: ILog|string) => {
+export const startServer = (routesDir: string, port: number, logPath?: string, logOption?: LogOption) => {
   // expressの初期化
   const app = express();
   app.use(express.json());
 
   // ログの設定
-  if(logging) {
-    let logger: ILog = (typeof logging === 'string') ? createDefaultLogger(logging) : logging;
+  if(logPath) {
+    let logger: ILog = {...createDefaultLogger(logPath), ...logOption};
     const logMiddleware = createLogMiddleware(logger);
     app.use(logMiddleware);
   }

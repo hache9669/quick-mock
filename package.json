@@ -1,6 +1,6 @@
 {
   "name": "rapid-mock",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "simple customizable mock server, automatically maps your file structure to corresponding URL paths",
   "repository": {
     "type": "git",
