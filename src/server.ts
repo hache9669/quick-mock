@@ -6,6 +6,7 @@ import picocolors from 'picocolors';
 import { rabbitSays } from './utils/logutils';
 import { ILog, LogOption } from './types/ILog';
 import { createDefaultLogger, createLogMiddleware } from './middleware/logger';
+import https from 'https';
 
 // @TODO 分割したい…
 
@@ -40,9 +41,17 @@ const createUrl = (rootPath: string, filePath: string) => {
  * 
  * @param routesDir ルート定義を格納しているディレクトリのパス
  * @param port サーバを動かすポート
- * @param logging ログファイルのパス、もしくはログの設定オブジェクト
+ * @param logPath ログファイルのパス、もしくはログの設定オブジェクト
+ * @param logOption ログの設定オブジェクト（未指定の場合はデフォルト）
+ * @param sshOption SSHの設定オブジェクト（未指定の場合はHTTP）
  */
-export const startServer = (routesDir: string, port: number, logPath?: string, logOption?: LogOption) => {
+export const startServer = (
+  routesDir: string,
+  port: number,
+  logPath?: string,
+  logOption?: LogOption,
+  sshOption?: https.ServerOptions
+) => {
   // expressの初期化
   const app = express();
   app.use(express.json());
@@ -136,8 +145,15 @@ export const startServer = (routesDir: string, port: number, logPath?: string, l
   seek(routesDir);
 
   // サーバー起動
-  app.listen(port, () => {
-    const message = `Server is running on http://localhost:${port}`;
-    rabbitSays(message, true);
-  });
+  const showInitialMessage = (protocol: 'http'|'https') => {
+    return () => {
+      const message = `Server is running on ${protocol}://localhost:${port}`;
+      rabbitSays(message, true);
+    }
+  }
+  if(sshOption){
+    https.createServer(sshOption, app).listen(port, showInitialMessage('https'));
+  } else {
+    app.listen(port, showInitialMessage('http'));
+  }
 }
