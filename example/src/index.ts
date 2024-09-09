@@ -23,8 +23,9 @@ startServer(
     3000, 
     logPath,
     { format, writeConsole: true },
-    { 
-        key: fs.readFileSync(path.resolve(__dirname, '../', 'keys', 'example.key.pem')),
-        cert: fs.readFileSync(path.resolve(__dirname, '../', 'keys', 'example.cert.pem'))
-    }
+    // use https
+    // { 
+    //     key: fs.readFileSync(path.resolve(__dirname, '../', 'keys', 'example.key.pem')),
+    //     cert: fs.readFileSync(path.resolve(__dirname, '../', 'keys', 'example.cert.pem'))
+    // }
 );

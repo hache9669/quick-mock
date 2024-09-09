@@ -1,0 +1,2 @@
+### GET count up each request
+GET http://localhost:3000/api/counter
